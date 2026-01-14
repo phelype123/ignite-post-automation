@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { PageTransition } from "./PageTransition";
 import {
   LayoutDashboard,
   Package,
@@ -249,7 +250,9 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Page content */}
         <main className="flex-1 overflow-auto p-4 lg:p-6">
-          {children}
+          <PageTransition key={location.pathname}>
+            {children}
+          </PageTransition>
         </main>
       </div>
     </div>
