@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -20,9 +20,11 @@ import {
   Moon,
   LogOut,
   Menu,
+  Home,
+  ChevronRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +34,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+
+// Route name mappings
+const routeNames: Record<string, string> = {
+  app: "Dashboard",
+  products: "Produtos",
+  posts: "Conteúdos",
+  media: "Mídia",
+  calendar: "Calendário",
+  autopilot: "Piloto Automático",
+  insights: "Insights",
+  inbox: "Inbox",
+  settings: "Configurações",
+  help: "Ajuda",
+  import: "Importar",
+  new: "Novo",
+};
 
 const navigation = [
   { name: "Dashboard", href: "/app", icon: LayoutDashboard, permission: "view:dashboard" as const },
@@ -59,6 +85,23 @@ export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
   const { user, store, logout, hasPermission } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  // Generate breadcrumbs from current path
+  const breadcrumbs = useMemo(() => {
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    const crumbs: { label: string; href: string; isLast: boolean }[] = [];
+    
+    let currentPath = '';
+    pathSegments.forEach((segment, index) => {
+      currentPath += `/${segment}`;
+      const isLast = index === pathSegments.length - 1;
+      const label = routeNames[segment] || segment;
+      
+      crumbs.push({ label, href: currentPath, isLast });
+    });
+    
+    return crumbs;
+  }, [location.pathname]);
 
   const filteredNavigation = navigation.filter(
     item => !item.permission || hasPermission(item.permission)
@@ -236,6 +279,35 @@ export function AppLayout({ children }: AppLayoutProps) {
             >
               <Menu className="h-5 w-5" />
             </Button>
+            
+            {/* Breadcrumbs */}
+            <Breadcrumb className="hidden sm:flex">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/app" className="flex items-center gap-1">
+                      <Home className="h-3.5 w-3.5" />
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {breadcrumbs.slice(1).map((crumb, index) => (
+                  <span key={crumb.href} className="contents">
+                    <BreadcrumbSeparator>
+                      <ChevronRightIcon className="h-3.5 w-3.5" />
+                    </BreadcrumbSeparator>
+                    <BreadcrumbItem>
+                      {crumb.isLast ? (
+                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink asChild>
+                          <Link to={crumb.href}>{crumb.label}</Link>
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </span>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
 
           <div className="flex items-center gap-3">
