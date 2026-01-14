@@ -11,9 +11,20 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import OnboardingPage from "./pages/OnboardingPage";
 
 // App pages
 import DashboardPage from "./pages/app/DashboardPage";
+import ProductsPage from "./pages/app/ProductsPage";
+import ProductDetailPage from "./pages/app/ProductDetailPage";
+import ImportPage from "./pages/app/ImportPage";
+import MediaPage from "./pages/app/MediaPage";
+import PostsPage from "./pages/app/PostsPage";
+import PostEditorPage from "./pages/app/PostEditorPage";
+import AutopilotPage from "./pages/app/AutopilotPage";
+import InsightsPage from "./pages/app/InsightsPage";
+import InboxPage from "./pages/app/InboxPage";
+import SettingsPage from "./pages/app/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,10 +55,22 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/onboarding" element={<OnboardingPage />} />
       
       {/* Protected app routes */}
       <Route path="/app" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-      <Route path="/app/*" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/app/products" element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+      <Route path="/app/products/:id" element={<ProtectedRoute><ProductDetailPage /></ProtectedRoute>} />
+      <Route path="/app/import" element={<ProtectedRoute><ImportPage /></ProtectedRoute>} />
+      <Route path="/app/media" element={<ProtectedRoute><MediaPage /></ProtectedRoute>} />
+      <Route path="/app/posts" element={<ProtectedRoute><PostsPage /></ProtectedRoute>} />
+      <Route path="/app/posts/new" element={<ProtectedRoute><PostEditorPage /></ProtectedRoute>} />
+      <Route path="/app/calendar" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/app/autopilot" element={<ProtectedRoute><AutopilotPage /></ProtectedRoute>} />
+      <Route path="/app/insights" element={<ProtectedRoute><InsightsPage /></ProtectedRoute>} />
+      <Route path="/app/inbox" element={<ProtectedRoute><InboxPage /></ProtectedRoute>} />
+      <Route path="/app/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+      <Route path="/app/help" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
       
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
